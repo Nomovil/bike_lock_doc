@@ -47,13 +47,27 @@ stateDiagram-v2
 | Showing | Photo, details card | enabled, label *New photo* | enabled |
 | Busy | Previous content dimmed + card with spinner and step text | disabled | disabled |
 
+### Language menu (FR-19)
+
+```
+                 ┌────────────────────┐
+                 │ ✓ System language  │  ← translated label
+                 ├────────────────────┤
+                 │   Deutsch          │  ← each language in its own name
+                 │   English          │
+                 └────────────────────┘
+```
+
+Opened by the translate icon in the app bar (tooltip *Change language*).
+Selecting an entry closes the menu and re-renders the app in that language.
+
 ## 6.4 Wireframes
 
 ### Home – empty state
 
 ```
 ┌──────────────────────────────┐
-│ Bike Lock Proof              │  ← AppBar
+│ Bike Lock Proof          🌐  │  ← AppBar; 🌐 = language button (FR-19)
 ├──────────────────────────────┤
 │                              │
 │            🚲                │  ← Icons.pedal_bike, 96 dp, primary colour
@@ -75,7 +89,7 @@ stateDiagram-v2
 
 ```
 ┌──────────────────────────────┐
-│ Bike Lock Proof              │
+│ Bike Lock Proof          🌐  │
 ├──────────────────────────────┤
 │ ┌──────────────────────────┐ │
 │ │                          │ │

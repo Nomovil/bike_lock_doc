@@ -33,5 +33,11 @@
   "errorLocationServicesOff": "Die Standortdienste sind ausgeschaltet.",
   "errorLocationPermissionDenied": "Standortzugriff wurde verweigert.",
   "savedWithoutLocation": "Foto gespeichert, aber der Standort konnte nicht ermittelt werden.",
-  "errorSaving": "Speichern fehlgeschlagen: {error}"
+  "errorSaving": "Speichern fehlgeschlagen: {error}",
+
+  "languageName": "Deutsch",
+
+  "changeLanguage": "Sprache ändern",
+
+  "systemLanguage": "Systemsprache"
 }

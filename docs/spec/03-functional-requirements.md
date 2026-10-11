@@ -16,6 +16,7 @@
 | US-8 | bike owner | see the address, not just coordinates | I understand the place at a glance | S |
 | US-9 | bike owner | zoom into the photo | I can check the lock is clearly visible | S |
 | US-10 | bike owner | still save the photo when GPS fails | I have at least the time-stamped proof | M |
+| US-11 | bike owner | choose the app language myself | I can use the app in my language even if my phone is set differently | S |
 
 ## 3.2 Feature overview
 
@@ -89,6 +90,12 @@ mindmap
 | ID | Requirement | Prio | Story |
 | --- | --- | --- | --- |
 | **FR-12** | A *Share* button must open the **system share sheet** with the JPEG file and a text containing: date/time, address (if any), coordinates with accuracy, and a Google Maps link (if location known). The subject must be `Bike lock <date time>`. *Share* is disabled while there is no photo. | M | US-7 |
+
+### Settings
+
+| ID | Requirement | Prio | Story |
+| --- | --- | --- | --- |
+| **FR-19** | A **language button** in the app bar must open a menu with *System language* plus every supported language, each named in its own language (*English*, *Deutsch*). The current choice is checked. Selecting an entry switches all texts immediately; the choice is **saved** and restored on the next start. A saved language that is no longer supported falls back to the system language. | S | US-11 |
 
 ### Degradation
 

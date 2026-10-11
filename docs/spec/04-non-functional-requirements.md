@@ -99,6 +99,6 @@ quadrantChart
 | ID | Requirement | Prio | Verification |
 | --- | --- | --- | --- |
 | **NFR-60** | Date format `dd.MM.yyyy HH:mm:ss` (24 h) in all languages, defined per language as a translatable pattern. | M | TC-02 |
-| **NFR-61** | All user-visible texts – UI, messages, stamped strip, shared text – come from ARB files (`flutter gen-l10n`). Supported: English (fallback), German. The language follows the system setting. | M | TC-46, review |
+| **NFR-61** | All user-visible texts – UI, messages, stamped strip, shared text – come from ARB files (`flutter gen-l10n`). Supported: English (fallback), German. The language follows the system setting unless the user picks one in the app (FR-19). | M | TC-46, review |
 | **NFR-62** | Adding a language requires only a new ARB file (plus launcher name / iOS locale list), no code changes. | S | review |
 | **NFR-63** | The street address is requested in the app's language. | C | TC-46 |

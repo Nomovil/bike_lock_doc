@@ -253,6 +253,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Saving failed: {error}'**
   String errorSaving(String error);
+
+  /// Name of this language, written in this language. Shown in the language menu.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageName;
+
+  /// Tooltip of the language button in the app bar.
+  ///
+  /// In en, this message translates to:
+  /// **'Change language'**
+  String get changeLanguage;
+
+  /// Language menu entry to follow the phone's language.
+  ///
+  /// In en, this message translates to:
+  /// **'System language'**
+  String get systemLanguage;
 }
 
 class _AppLocalizationsDelegate

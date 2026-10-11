@@ -98,19 +98,19 @@ gantt
     axisFormat  %d.%m.
 
     section Specification
-    Vision, requirements          :done, s1, 2026-10-03, 2d
+    Vision, requirements          :done, s1, 2026-10-10, 2d
     Architecture, data, flows     :done, s2, after s1, 2d
     Test plan, review, approval   :done, s3, after s2, 2d
 
     section Implementation
-    Project setup, dependencies   :i1, 2026-10-10, 1d
-    Storage and model             :i2, 2026-10-10, 1d
-    Capture, location, address    :i3, 2026-10-10, 1d
-    Stamping and EXIF             :i4, 2026-10-10, 1d
-    UI, share, full screen        :i5, 2026-10-10, 1d
+    Project setup, dependencies   :i1, 2026-10-11, 1d
+    Storage and model             :i2, 2026-10-11, 1d
+    Capture, location, address    :i3, 2026-10-11, 1d
+    Stamping and EXIF             :i4, 2026-10-11, 1d
+    UI, share, full screen        :i5, 2026-10-11, 1d
 
     section Quality
-    Unit tests, analysis          :q1, 2026-10-11, 1d
+    Unit tests, analysis          :q1, 2026-10-12, 1d
     Manual device tests           :q2, after q1, 1d
 
     section Release

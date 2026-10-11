@@ -108,4 +108,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String errorSaving(String error) {
     return 'Speichern fehlgeschlagen: $error';
   }
+
+  @override
+  String get languageName => 'Deutsch';
+
+  @override
+  String get changeLanguage => 'Sprache ändern';
+
+  @override
+  String get systemLanguage => 'Systemsprache';
 }

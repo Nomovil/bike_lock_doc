@@ -141,5 +141,20 @@
     "placeholders": {
       "error": { "type": "String" }
     }
+  },
+
+  "languageName": "English",
+  "@languageName": {
+    "description": "Name of this language, written in this language. Shown in the language menu."
+  },
+
+  "changeLanguage": "Change language",
+  "@changeLanguage": {
+    "description": "Tooltip of the language button in the app bar."
+  },
+
+  "systemLanguage": "System language",
+  "@systemLanguage": {
+    "description": "Language menu entry to follow the phone's language."
   }
 }

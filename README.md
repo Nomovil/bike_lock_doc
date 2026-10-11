@@ -14,6 +14,8 @@ as evidence for your bicycle insurance after a theft.
   gallery / Photos app.
 - **Share** – send the photo plus a text with date, address, coordinates and a
   Google Maps link via any app (Messenger, e-mail, …).
+- **English and German** – follows the phone's language, or pick one with the
+  🌐 button in the top bar.
 
 Technical details are in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). The
 full pre-implementation specification (requirements, use cases, architecture,
@@ -30,8 +32,9 @@ data model, test plan, decisions, with Mermaid diagrams) is in
 4. [Sharing the app with friends](#sharing-the-app-with-friends)
 5. [Signing the release build (Android)](#signing-the-release-build-android)
 6. [Translations](#translations)
-7. [Project structure](#project-structure)
-8. [Troubleshooting](#troubleshooting)
+7. [Customising the app (icon, name, colours)](#customising-the-app-icon-name-colours)
+8. [Project structure](#project-structure)
+9. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -276,7 +279,10 @@ keytool -printcert -jarfile build/app/outputs/flutter-apk/app-release.apk
 ## Translations
 
 The app follows the phone's system language. Supported: **English**
-(default/fallback) and **German**. It uses Flutter's built-in
+(default/fallback) and **German**. Users can override it with the
+**language button** (translate icon) in the top bar: *System language*,
+*English* or *Deutsch*. The choice is saved in the app's private
+`settings.json` and kept after restarts and updates. It uses Flutter's built-in
 [`gen-l10n`](https://docs.flutter.dev/ui/accessibility-and-internationalization/internationalization)
 tool with ARB files; the text stamped onto the photo and the shared text are
 translated too.
@@ -308,7 +314,8 @@ Edit the ARB file(s), then run `flutter gen-l10n` (or simply `flutter run` /
 
 1. Copy `lib/l10n/app_de.arb` to `lib/l10n/app_fr.arb`, set
    `"@@locale": "fr"` and translate every value (keep keys and
-   `{placeholders}` unchanged).
+   `{placeholders}` unchanged). Set `languageName` to `Français` – that's
+   how it appears in the language menu.
 2. Run `flutter gen-l10n` – French is now in
    `AppLocalizations.supportedLocales` and picked automatically on French
    phones.
@@ -322,12 +329,145 @@ build) writes `build/untranslated-messages.json`. It contains `{}` when
 everything is translated, otherwise the missing keys per language. Missing
 texts fall back to English in the app.
 
-Test a language without changing the phone's language: on Android 13+,
-*Settings → System → Languages → App languages*; or temporarily set
-`locale: const Locale('de')` on the `MaterialApp` in `lib/main.dart`.
+Test a language without changing the phone's language: use the language
+button in the app. New languages appear in its menu automatically, labelled
+with their `languageName` text.
 
 **Not yet translated:** the iOS permission dialog texts in `Info.plist`
 (needs `InfoPlist.strings` files added via Xcode).
+
+---
+
+## Customising the app (icon, name, colours)
+
+### App icon
+
+The icons are the Flutter default for now. The easiest way to replace them
+on both platforms is the
+[`flutter_launcher_icons`](https://pub.dev/packages/flutter_launcher_icons)
+package, which generates every required size from one picture.
+
+1. Create a square PNG, **1024 × 1024 px**, e.g. `assets/icon/icon.png`.
+   Keep the important part in the centre: Android crops icons into circles
+   or rounded squares.
+2. For Android's *adaptive* icons, also create a foreground image with a
+   transparent background and the motif in the inner ~66 %, e.g.
+   `assets/icon/icon_foreground.png`.
+3. Add the tool and its configuration:
+   ```sh
+   flutter pub add --dev flutter_launcher_icons
+   ```
+   At the end of `pubspec.yaml`:
+   ```yaml
+   flutter_launcher_icons:
+     android: true
+     ios: true
+     image_path: "assets/icon/icon.png"
+     adaptive_icon_background: "#009688"     # or an image path
+     adaptive_icon_foreground: "assets/icon/icon_foreground.png"
+     remove_alpha_ios: true                   # the App Store rejects transparent icons
+   ```
+4. Generate the icons and rebuild:
+   ```sh
+   dart run flutter_launcher_icons
+   flutter run
+   ```
+   This overwrites `android/app/src/main/res/mipmap-*/` and
+   `ios/Runner/Assets.xcassets/AppIcon.appiconset/`; commit those files.
+
+Doing it by hand instead: replace every `ic_launcher.png` in
+`android/app/src/main/res/mipmap-*` (48, 72, 96, 144, 192 px), and on iOS
+drag a 1024 px image into *Runner → Assets → AppIcon* in Xcode.
+
+Android sometimes keeps showing the old icon: uninstall the app or restart
+the launcher.
+
+### App name
+
+The name appears in several places; change all that apply:
+
+| Where the name shows | File | Key |
+| --- | --- | --- |
+| Inside the app (top bar, task switcher) | `lib/l10n/app_en.arb`, `app_de.arb`, … | `appTitle` |
+| Android home screen / app list | `android/app/src/main/res/values/strings.xml` (English/default) and `values-de/strings.xml` | `app_name` |
+| iPhone home screen | `ios/Runner/Info.plist` | `CFBundleDisplayName` (and `CFBundleName`, max. 15 characters) |
+
+Keep names short (≈ 12 characters) or the launcher truncates them under the
+icon. Run `flutter gen-l10n` (or just `flutter run`) after editing ARB files.
+
+**Package name / bundle ID** (`com.bikelock.bike_lock_doc`) is a different
+thing: it's the app's technical identity, never shown to users. Only change
+it **before** you share the app – phones treat a new ID as a completely
+different app, so friends couldn't update and would lose their photo. If
+needed: `applicationId` and `namespace` in `android/app/build.gradle.kts`,
+the Kotlin folder path of `MainActivity.kt`, and `PRODUCT_BUNDLE_IDENTIFIER`
+in Xcode (*Runner → Signing & Capabilities*).
+
+### Colours and general styling
+
+All styling is in **`lib/app_theme.dart`**.
+
+**Main colour** – change one line:
+
+```dart
+const Color appSeedColor = Colors.teal;      // e.g. Colors.indigo, Colors.deepOrange
+const Color appSeedColor = Color(0xFF2E7D32); // or any hex colour: 0xFF + RRGGBB
+```
+
+Material 3 derives a complete, matching palette from this seed – buttons, top
+bar, cards, progress indicators – in both light and dark mode. Use hot reload
+(`r`) while `flutter run` is active to try colours instantly.
+
+**More control** – extend `_buildTheme` in the same file, e.g.:
+
+```dart
+return ThemeData(
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: appSeedColor,
+    brightness: brightness,
+    secondary: Colors.amber,            // override single palette colours
+  ),
+  appBarTheme: const AppBarTheme(centerTitle: true),
+  filledButtonTheme: FilledButtonThemeData(
+    style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
+  ),
+  cardTheme: const CardThemeData(elevation: 0),
+);
+```
+
+The [Material Theme Builder](https://material-foundation.github.io/material-theme-builder/)
+shows what a seed colour looks like and can export a full colour scheme.
+
+**Light / dark mode** follows the system. To force one, set
+`themeMode: ThemeMode.light` (or `.dark`) on the `MaterialApp` in
+`lib/main.dart`.
+
+**Custom font**:
+
+1. Put the font files in `assets/fonts/`, e.g. `Inter-Regular.ttf` and
+   `Inter-Bold.ttf`.
+2. Register them in `pubspec.yaml` under `flutter:`:
+   ```yaml
+   fonts:
+     - family: Inter
+       fonts:
+         - asset: assets/fonts/Inter-Regular.ttf
+         - asset: assets/fonts/Inter-Bold.ttf
+           weight: 700
+   ```
+3. Add `fontFamily: 'Inter'` to the `ThemeData` in `lib/app_theme.dart`.
+
+**Text stamped on the photo** uses its own colours (white text on 55 % black)
+so it stays readable on any photo. They're in `lib/photo_stamper.dart`
+(`Colors.white`, `Colors.black.withValues(alpha: 0.55)`); the font size is
+`shortSide * 0.035`.
+
+**Splash screen** (shown for a moment while the app starts): white by
+default. Change the background colour in
+`android/app/src/main/res/drawable/launch_background.xml` (and
+`drawable-v21/`) and in `ios/Runner/Base.lproj/LaunchScreen.storyboard`, or
+use the [`flutter_native_splash`](https://pub.dev/packages/flutter_native_splash)
+package, which works like `flutter_launcher_icons`.
 
 ---
 
@@ -335,12 +475,15 @@ Test a language without changing the phone's language: on Android 13+,
 
 ```
 lib/
-  main.dart            UI: home screen, camera, location, sharing
+  main.dart            UI: home screen, language menu, camera, location, sharing
+  app_theme.dart       colours and styling (seed colour, light/dark theme)
+  language_controller.dart  selected language, saved in settings.json
   photo_stamper.dart   draws the date/location strip, writes EXIF, encodes JPEG
   lock_record.dart     LockRecord model + LockStorage (keeps exactly one photo)
   l10n/                translations (app_<lang>.arb) + generated Dart code
 test/
   widget_test.dart     unit tests for LockRecord and translations
+  language_test.dart   widget test: language menu and saved choice
 android/               Android project (permissions in app/src/main/AndroidManifest.xml)
 ios/                   iOS project (permission texts in Runner/Info.plist)
 docs/ARCHITECTURE.md   how the app works internally

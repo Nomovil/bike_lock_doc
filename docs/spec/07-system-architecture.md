@@ -65,6 +65,7 @@ flowchart TB
         Storage["LockStorage<br/>lib/lock_record.dart<br/>single-record persistence"]
         Stamper["PhotoStamper<br/>lib/photo_stamper.dart<br/>strip drawing, EXIF, JPEG"]
         L10n["AppLocalizations<br/>lib/l10n/ (generated)<br/>all texts, en + de"]
+        Lang["LanguageController<br/>lib/language_controller.dart<br/>chosen language, settings.json"]
     end
 
     subgraph Packages["Packages"]
@@ -94,6 +95,8 @@ flowchart TB
     Stamper --> INTL
     Record --> INTL
     Home --> L10n
+    App --> Lang
+    Lang --> PP
     Record --> L10n
     Stamper --> L10n
 ```

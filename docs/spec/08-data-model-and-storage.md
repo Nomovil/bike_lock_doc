@@ -64,6 +64,7 @@ classDiagram
 
 ```
 <app documents directory>/
+├── settings.json                 {"languageCode": "de"} or null = system (FR-19)
 └── bike_lock/
     ├── lock_record.json          metadata of the current photo
     └── lock_photo_<epochMillis>.jpg   the one stamped photo

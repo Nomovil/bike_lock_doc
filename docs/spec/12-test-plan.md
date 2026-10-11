@@ -87,6 +87,7 @@ below.
 | TC-43 | File size | Check saved JPEG | ≤ 2560 px long side; typically ≤ 2 MB | NFR-13 |
 | TC-44 | Dark mode | Switch system to dark | App follows; texts readable | NFR-22 |
 | TC-45 | Large font | System font size max | Texts scale, no overflow errors | NFR-26 |
+| TC-47 | Language menu | Pick *Deutsch*, restart app; pick *System language* | German immediately and after restart; then phone language again. Automated: `test/language_test.dart` | FR-19 |
 | TC-46 | Language | Set phone (or app) language to German, take and share a photo; then to French | German UI, strip, share text and address; French falls back to English | NFR-61, NFR-63 |
 
 ### Sharing (manual)
@@ -167,6 +168,7 @@ flowchart LR
 | FR-15 Temp file | TC-24 |
 | FR-16 Empty state | TC-23, TC-33 |
 | FR-17 Permission timing | TC-14, TC-62 |
+| FR-19 Language menu | TC-47 |
 | FR-18 Upright | TC-11 |
 | NFR-01…04 Privacy | TC-30…TC-33 |
 | NFR-05…07 Reliability | TC-22, TC-23, TC-65, TC-66 |

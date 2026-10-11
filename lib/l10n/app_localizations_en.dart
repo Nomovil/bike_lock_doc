@@ -106,4 +106,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String errorSaving(String error) {
     return 'Saving failed: $error';
   }
+
+  @override
+  String get languageName => 'English';
+
+  @override
+  String get changeLanguage => 'Change language';
+
+  @override
+  String get systemLanguage => 'System language';
 }

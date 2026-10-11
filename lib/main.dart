@@ -7,34 +7,41 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:share_plus/share_plus.dart';
 
+import 'app_theme.dart';
 import 'l10n/app_localizations.dart';
+import 'language_controller.dart';
 import 'lock_record.dart';
 import 'photo_stamper.dart';
 
-/// Entry point. The whole app is a single screen, see [HomePage].
-void main() => runApp(const BikeLockApp());
+/// Entry point. Restores the saved language, then shows [BikeLockApp].
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final languageController = LanguageController();
+  await languageController.load();
+  runApp(BikeLockApp(languageController: languageController));
+}
 
-/// Root widget: sets up the Material theme (light and dark), localisation
-/// (follows the system language, English fallback) and [HomePage].
+/// Root widget: sets up the theme (see `app_theme.dart`), localisation and
+/// [HomePage]. Rebuilds when the user picks another language.
 class BikeLockApp extends StatelessWidget {
-  const BikeLockApp({super.key});
+  const BikeLockApp({super.key, required this.languageController});
+
+  final LanguageController languageController;
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
+    return ValueListenableBuilder<Locale?>(
+      valueListenable: languageController,
+      builder: (context, locale, _) => MaterialApp(
+        onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
+        // null = follow the system language (English if unsupported).
+        locale: locale,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        theme: lightTheme,
+        darkTheme: darkTheme,
+        home: HomePage(languageController: languageController),
       ),
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.teal,
-          brightness: Brightness.dark,
-        ),
-      ),
-      home: const HomePage(),
     );
   }
 }
@@ -42,7 +49,9 @@ class BikeLockApp extends StatelessWidget {
 /// The only screen: shows the current [LockRecord] (or an empty state) and
 /// offers the "New photo" and "Share" actions.
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, required this.languageController});
+
+  final LanguageController languageController;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -246,7 +255,10 @@ class _HomePageState extends State<HomePage> {
     final l10n = AppLocalizations.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.appTitle)),
+      appBar: AppBar(
+        title: Text(l10n.appTitle),
+        actions: [_LanguageButton(controller: widget.languageController)],
+      ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : Stack(
@@ -303,6 +315,52 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// App bar button that opens a menu to pick the app language.
+///
+/// Lists "System language" plus every language in
+/// [AppLocalizations.supportedLocales], each in its own language, so adding
+/// an ARB file is enough to make a new language appear here.
+class _LanguageButton extends StatelessWidget {
+  const _LanguageButton({required this.controller});
+
+  final LanguageController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    // Listen directly: switching e.g. from English to "System language" on an
+    // English phone changes no text, so nothing else would rebuild this.
+    return ValueListenableBuilder<Locale?>(
+      valueListenable: controller,
+      builder: (context, selected, _) {
+        final current = selected?.languageCode;
+        // PopupMenuButton can't use null as a value: '' stands for "system".
+        return PopupMenuButton<String>(
+          icon: const Icon(Icons.translate),
+          tooltip: l10n.changeLanguage,
+          initialValue: current ?? '',
+          onSelected: (code) =>
+              controller.select(code.isEmpty ? null : Locale(code)),
+          itemBuilder: (context) => [
+            CheckedPopupMenuItem(
+              value: '',
+              checked: current == null,
+              child: Text(l10n.systemLanguage),
+            ),
+            const PopupMenuDivider(),
+            for (final locale in AppLocalizations.supportedLocales)
+              CheckedPopupMenuItem(
+                value: locale.languageCode,
+                checked: current == locale.languageCode,
+                child: Text(lookupAppLocalizations(locale).languageName),
+              ),
+          ],
+        );
+      },
     );
   }
 }

@@ -4,7 +4,7 @@
 | --- | --- |
 | **Product** | Bike Lock Proof (package `bike_lock_doc`) |
 | **Document set** | Software Requirements & Design Specification |
-| **Version** | 1.1 |
+| **Version** | 1.2 |
 | **Status** | Approved for implementation |
 | **Target release** | 1.0.0 |
 | **Platforms** | Android, iOS (Flutter) |
@@ -78,3 +78,4 @@ flowchart LR
 | 0.9 | 2026-10-08 | Test plan, release, review feedback |
 | 1.0 | 2026-10-09 | Approved for implementation |
 | 1.1 | 2026-10-11 | Localisation (English, German) moved into scope: NFR-60…63, TC-46, O-1 done |
+| 1.2 | 2026-10-11 | In-app language selection: US-11, FR-19, TC-47; `settings.json` |
