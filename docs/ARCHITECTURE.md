@@ -1,7 +1,8 @@
 # Architecture
 
 How Bike Lock Proof works internally. For setup, building and sharing see the
-[README](../README.md).
+[README](../README.md); requirements and design rationale are in the
+[specification](spec/README.md).
 
 ## Overview
 

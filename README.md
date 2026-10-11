@@ -15,7 +15,10 @@ as evidence for your bicycle insurance after a theft.
 - **Share** – send the photo plus a text with date, address, coordinates and a
   Google Maps link via any app (Messenger, e-mail, …).
 
-Technical details are in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+Technical details are in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). The
+full pre-implementation specification (requirements, use cases, architecture,
+data model, test plan, decisions, with Mermaid diagrams) is in
+[docs/spec/](docs/spec/README.md).
 
 ---
 
@@ -281,6 +284,7 @@ test/
 android/               Android project (permissions in app/src/main/AndroidManifest.xml)
 ios/                   iOS project (permission texts in Runner/Info.plist)
 docs/ARCHITECTURE.md   how the app works internally
+docs/spec/             full software specification (16 documents)
 pubspec.yaml           app version and dependencies
 ```
 
