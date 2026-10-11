@@ -40,6 +40,7 @@ flowchart TB
         G["Keep exactly one photo, privately"]
         H["Show photo and details"]
         I["Share photo and text summary"]
+        Q["UI in English and German"]
     end
     subgraph OUT["Out of scope"]
         J["History of several photos"]
@@ -48,7 +49,6 @@ flowchart TB
         M["Cryptographic signing / notarisation"]
         N["Theft alarm, tracking, Bluetooth locks"]
         O["Map view inside the app"]
-        P["Multiple languages"]
     end
 ```
 
@@ -61,7 +61,6 @@ flowchart TB
 | Insurer integration | Every insurer differs; sharing covers e-mail and web upload. |
 | Cryptographic proof | Legal value unclear; considered for a later release (see [15](15-risks-and-open-issues.md)). |
 | Map view | Google Maps link in the shared text is sufficient. |
-| Localisation | Single user group in 1.0; texts are kept in one place for later translation. |
 
 ## 1.6 Success criteria for release 1.0
 

@@ -5,12 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:intl/intl.dart' show DateFormat;
 
+import 'l10n/app_localizations.dart';
+import 'lock_record.dart' show formatTimestamp;
+
 /// Burns date, time and location into the photo and also writes them as
 /// EXIF metadata, so the information travels with the image when shared.
 class PhotoStamper {
   /// Returns a JPEG of [sourceBytes] with a text strip along the bottom edge
   /// and EXIF date/GPS tags. Location values are optional; when missing the
-  /// strip says "Location unavailable".
+  /// strip says "Location unavailable". The strip text is in the language of
+  /// [l10n].
   ///
   /// Drawing uses Flutter's canvas (proper fonts, umlauts etc.); the slow JPEG
   /// encoding runs in a background isolate via [compute].
@@ -21,6 +25,7 @@ class PhotoStamper {
     double? longitude,
     double? accuracy,
     String? address,
+    required AppLocalizations l10n,
   }) async {
     // Flutter's decoder applies the EXIF orientation, so the result is upright.
     final codec = await ui.instantiateImageCodec(sourceBytes);
@@ -28,14 +33,18 @@ class PhotoStamper {
     final width = source.width;
     final height = source.height;
 
+    final coordinates = latitude != null && longitude != null
+        ? '${latitude.toStringAsFixed(6)}, ${longitude.toStringAsFixed(6)}'
+        : null;
     final lines = <String>[
-      DateFormat('dd.MM.yyyy  HH:mm:ss').format(timestamp),
+      formatTimestamp(timestamp, l10n),
       if (address != null && address.isNotEmpty) address,
-      if (latitude != null && longitude != null)
-        'GPS ${latitude.toStringAsFixed(6)}, ${longitude.toStringAsFixed(6)}'
-            '${accuracy != null ? '  (±${accuracy.round()} m)' : ''}'
+      if (coordinates == null)
+        l10n.stampLocationUnavailable
+      else if (accuracy != null)
+        l10n.stampGpsWithAccuracy(coordinates, accuracy.round())
       else
-        'Location unavailable',
+        l10n.stampGps(coordinates),
     ];
 
     final shortSide = width < height ? width : height;

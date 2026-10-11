@@ -87,6 +87,7 @@ below.
 | TC-43 | File size | Check saved JPEG | ≤ 2560 px long side; typically ≤ 2 MB | NFR-13 |
 | TC-44 | Dark mode | Switch system to dark | App follows; texts readable | NFR-22 |
 | TC-45 | Large font | System font size max | Texts scale, no overflow errors | NFR-26 |
+| TC-46 | Language | Set phone (or app) language to German, take and share a photo; then to French | German UI, strip, share text and address; French falls back to English | NFR-61, NFR-63 |
 
 ### Sharing (manual)
 
@@ -171,6 +172,7 @@ flowchart LR
 | NFR-05…07 Reliability | TC-22, TC-23, TC-65, TC-66 |
 | NFR-10…13 Performance | TC-41…TC-43 |
 | NFR-20…27 Usability | TC-40, TC-44, TC-45 |
+| NFR-60…63 Localisation | TC-02, TC-46 |
 | NFR-32, 33 Compatibility | TC-51, TC-52 |
 | NFR-40 Analysis | TC-05 |
 | NFR-50…52 Distribution | TC-70, TC-71 |

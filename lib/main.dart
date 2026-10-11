@@ -7,20 +7,24 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:share_plus/share_plus.dart';
 
+import 'l10n/app_localizations.dart';
 import 'lock_record.dart';
 import 'photo_stamper.dart';
 
 /// Entry point. The whole app is a single screen, see [HomePage].
 void main() => runApp(const BikeLockApp());
 
-/// Root widget: sets up the Material theme (light and dark) and [HomePage].
+/// Root widget: sets up the Material theme (light and dark), localisation
+/// (follows the system language, English fallback) and [HomePage].
 class BikeLockApp extends StatelessWidget {
   const BikeLockApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Bike Lock Proof',
+      onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
       ),
@@ -70,7 +74,9 @@ class _HomePageState extends State<HomePage> {
   Future<void> _takePhoto() async {
     // Start fetching the location right away so it is ready (or close to it)
     // by the time the photo has been taken.
-    final positionFuture = _getPosition();
+    final l10n = AppLocalizations.of(context);
+    final locale = Localizations.localeOf(context);
+    final positionFuture = _getPosition(l10n);
 
     final XFile? shot;
     try {
@@ -81,22 +87,22 @@ class _HomePageState extends State<HomePage> {
         imageQuality: 95,
       );
     } catch (e) {
-      _showMessage('Could not open camera: $e');
+      _showMessage(l10n.errorCamera('$e'));
       return;
     }
     if (shot == null) return; // Cancelled: keep the existing photo.
 
     final timestamp = DateTime.now();
-    setState(() => _busyMessage = 'Getting location…');
+    setState(() => _busyMessage = l10n.gettingLocation);
 
     try {
       final position = await positionFuture;
       String? address;
       if (position != null) {
-        address = await _reverseGeocode(position);
+        address = await _reverseGeocode(position, locale);
       }
 
-      setState(() => _busyMessage = 'Saving photo…');
+      setState(() => _busyMessage = l10n.savingPhoto);
       final stamped = await PhotoStamper.stamp(
         sourceBytes: await shot.readAsBytes(),
         timestamp: timestamp,
@@ -104,6 +110,7 @@ class _HomePageState extends State<HomePage> {
         longitude: position?.longitude,
         accuracy: position?.accuracy,
         address: address,
+        l10n: l10n,
       );
 
       final record = await _storage.replace(
@@ -118,10 +125,10 @@ class _HomePageState extends State<HomePage> {
       if (!mounted) return;
       setState(() => _record = record);
       if (position == null) {
-        _showMessage('Photo saved, but the location could not be determined.');
+        _showMessage(l10n.savedWithoutLocation);
       }
     } catch (e) {
-      _showMessage('Saving failed: $e');
+      _showMessage(l10n.errorSaving('$e'));
     } finally {
       // Remove the camera's temporary copy; the app keeps its own private one.
       unawaited(File(shot.path).delete().then((_) {}, onError: (_) {}));
@@ -131,10 +138,10 @@ class _HomePageState extends State<HomePage> {
 
   /// Asks for location permission if needed and returns the current GPS
   /// position, or `null` if location is unavailable. Never throws.
-  Future<Position?> _getPosition() async {
+  Future<Position?> _getPosition(AppLocalizations l10n) async {
     try {
       if (!await Geolocator.isLocationServiceEnabled()) {
-        _showMessage('Location services are turned off.');
+        _showMessage(l10n.errorLocationServicesOff);
         return null;
       }
       var permission = await Geolocator.checkPermission();
@@ -143,7 +150,7 @@ class _HomePageState extends State<HomePage> {
       }
       if (permission == LocationPermission.denied ||
           permission == LocationPermission.deniedForever) {
-        _showMessage('Location permission denied.');
+        _showMessage(l10n.errorLocationPermissionDenied);
         return null;
       }
       try {
@@ -162,11 +169,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// Turns coordinates into a short "street, postcode city" string using the
-  /// platform geocoder. Needs internet; returns `null` on any failure.
-  Future<String?> _reverseGeocode(Position position) async {
+  /// platform geocoder, in the app's [locale]. Needs internet; returns `null`
+  /// on any failure.
+  Future<String?> _reverseGeocode(Position position, Locale locale) async {
     try {
       final placemarks = await Geocoding()
-          .placemarkFromCoordinates(position.latitude, position.longitude)
+          .placemarkFromCoordinates(
+            position.latitude,
+            position.longitude,
+            locale: locale,
+          )
           .timeout(const Duration(seconds: 8));
       if (placemarks.isEmpty) return null;
       final p = placemarks.first;
@@ -187,12 +199,13 @@ class _HomePageState extends State<HomePage> {
   Future<void> _share(BuildContext buttonContext) async {
     final record = _record;
     if (record == null) return;
+    final l10n = AppLocalizations.of(context);
     final box = buttonContext.findRenderObject() as RenderBox?;
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(record.photoPath, mimeType: 'image/jpeg')],
-        text: record.shareText,
-        subject: 'Bike lock ${record.formattedDateTime}',
+        text: record.shareText(l10n),
+        subject: record.shareSubject(l10n),
         sharePositionOrigin: box == null
             ? null
             : box.localToGlobal(Offset.zero) & box.size,
@@ -230,9 +243,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final record = _record;
     final busy = _busyMessage != null;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Bike Lock Proof')),
+      appBar: AppBar(title: Text(l10n.appTitle)),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : Stack(
@@ -270,7 +284,7 @@ class _HomePageState extends State<HomePage> {
                 child: FilledButton.icon(
                   onPressed: busy ? null : _takePhoto,
                   icon: const Icon(Icons.photo_camera),
-                  label: Text(record == null ? 'Take photo' : 'New photo'),
+                  label: Text(record == null ? l10n.takePhoto : l10n.newPhoto),
                 ),
               ),
               const SizedBox(width: 12),
@@ -281,7 +295,7 @@ class _HomePageState extends State<HomePage> {
                         ? null
                         : () => _share(buttonContext),
                     icon: const Icon(Icons.share),
-                    label: const Text('Share'),
+                    label: Text(l10n.share),
                   ),
                 ),
               ),
@@ -300,6 +314,7 @@ class _EmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -308,13 +323,9 @@ class _EmptyState extends StatelessWidget {
           children: [
             Icon(Icons.pedal_bike, size: 96, color: theme.colorScheme.primary),
             const SizedBox(height: 16),
-            Text('No photo yet', style: theme.textTheme.titleLarge),
+            Text(l10n.noPhotoYet, style: theme.textTheme.titleLarge),
             const SizedBox(height: 8),
-            const Text(
-              'Take a photo of your locked bike. Date, time and location '
-              'are saved with it. Each new photo replaces the previous one.',
-              textAlign: TextAlign.center,
-            ),
+            Text(l10n.emptyStateText, textAlign: TextAlign.center),
           ],
         ),
       ),
@@ -331,6 +342,7 @@ class _RecordView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
@@ -347,22 +359,22 @@ class _RecordView extends StatelessWidget {
             children: [
               ListTile(
                 leading: const Icon(Icons.schedule),
-                title: Text(record.formattedDateTime),
-                subtitle: const Text('Date & time'),
+                title: Text(record.formattedDateTime(l10n)),
+                subtitle: Text(l10n.dateTimeLabel),
               ),
               if (record.address != null)
                 ListTile(
                   leading: const Icon(Icons.place),
                   title: Text(record.address!),
-                  subtitle: const Text('Address'),
+                  subtitle: Text(l10n.addressLabel),
                 ),
               ListTile(
                 leading: const Icon(Icons.gps_fixed),
-                title: Text(record.formattedCoordinates),
+                title: Text(record.formattedCoordinates(l10n)),
                 subtitle: Text(
-                  record.accuracy != null
-                      ? 'GPS (±${record.accuracy!.round()} m)'
-                      : 'GPS',
+                  record.accuracyMeters != null
+                      ? l10n.gpsLabelWithAccuracy(record.accuracyMeters!)
+                      : l10n.gpsLabel,
                 ),
               ),
             ],

@@ -62,7 +62,7 @@ mindmap
 
 | ID | Requirement | Prio | Story |
 | --- | --- | --- | --- |
-| **FR-05** | The saved photo must contain a **visible information strip** along the bottom edge with: date and time (`dd.MM.yyyy  HH:mm:ss`), address (if known), and `GPS <lat>, <lon>  (±<accuracy> m)` or `Location unavailable`. The strip must be readable on a phone screen without zooming. | M | US-4 |
+| **FR-05** | The saved photo must contain a **visible information strip** along the bottom edge with: date and time (`dd.MM.yyyy HH:mm:ss`), address (if known), and `GPS <lat>, <lon>  (±<accuracy> m)` or `Location unavailable`. The strip must be readable on a phone screen without zooming. | M | US-4 |
 | **FR-06** | The saved JPEG must contain **EXIF** tags: `DateTime`, `DateTimeOriginal`, `ImageDescription` (the strip text) and GPS latitude/longitude with hemisphere references (if known). | M | US-2, US-3 |
 | **FR-18** | The photo must be stored **upright** regardless of how the phone was held. | M | US-4 |
 

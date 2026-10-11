@@ -64,6 +64,7 @@ flowchart TB
         Record["LockRecord<br/>lib/lock_record.dart<br/>model, formatting, JSON"]
         Storage["LockStorage<br/>lib/lock_record.dart<br/>single-record persistence"]
         Stamper["PhotoStamper<br/>lib/photo_stamper.dart<br/>strip drawing, EXIF, JPEG"]
+        L10n["AppLocalizations<br/>lib/l10n/ (generated)<br/>all texts, en + de"]
     end
 
     subgraph Packages["Packages"]
@@ -92,6 +93,9 @@ flowchart TB
     Stamper --> IMG
     Stamper --> INTL
     Record --> INTL
+    Home --> L10n
+    Record --> L10n
+    Stamper --> L10n
 ```
 
 ### Component responsibilities
@@ -134,6 +138,7 @@ flowchart LR
 | Sharing | `share_plus` | 13.3 | system share sheet, files + text |
 | JPEG / EXIF | `image` | 4.10 | pure Dart encoder with EXIF write support (ADR-03) |
 | Dates | `intl` | 0.20 | `DateFormat` |
+| Translations | `flutter_localizations` + `gen-l10n` | SDK | official tooling, ARB files, type-safe generated API (NFR-61) |
 | State | `StatefulWidget` | – | one screen, no library needed (ADR-05) |
 
 ## 7.6 Deployment view

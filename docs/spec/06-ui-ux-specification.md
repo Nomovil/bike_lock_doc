@@ -134,12 +134,15 @@ stateDiagram-v2
 | Text colour | White, weight 600, line height 1.3 |
 | Font size | 3.5 % of the image's **short** side (≈ 50 px on a 1440 px wide photo) |
 | Padding | 0.6 × font size on all sides |
-| Line 1 | `dd.MM.yyyy  HH:mm:ss` (two spaces) |
+| Line 1 | Capture time in the language's `dateTimePattern` (`dd.MM.yyyy HH:mm:ss`) |
 | Line 2 | Address – omitted if unknown |
 | Line 3 | `GPS <lat 6 dp>, <lon 6 dp>  (±<m> m)` or `Location unavailable` |
 | Wrapping | Long addresses wrap within the image width |
 
 ## 6.6 Messages (snack bars)
+
+All texts in this document are the **English** source texts; the German
+translations live in `lib/l10n/app_de.arb` (NFR-61).
 
 | Situation | Text |
 | --- | --- |

@@ -4,6 +4,12 @@ import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'l10n/app_localizations.dart';
+
+/// Formats [time] with the language's [AppLocalizations.dateTimePattern].
+String formatTimestamp(DateTime time, AppLocalizations l10n) =>
+    DateFormat(l10n.dateTimePattern, l10n.localeName).format(time);
+
 /// The single documented bike lock: the photo plus when and where it was taken.
 class LockRecord {
   LockRecord({
@@ -24,24 +30,39 @@ class LockRecord {
 
   bool get hasLocation => latitude != null && longitude != null;
 
-  String get formattedDateTime =>
-      DateFormat('dd.MM.yyyy HH:mm:ss').format(timestamp);
-
-  String get formattedCoordinates => hasLocation
+  /// `lat, lon` with 6 decimals (≈ 10 cm), or `null` without location.
+  String? get coordinates => hasLocation
       ? '${latitude!.toStringAsFixed(6)}, ${longitude!.toStringAsFixed(6)}'
-      : 'Unknown location';
+      : null;
+
+  /// Accuracy rounded to whole metres, or `null` if unknown.
+  int? get accuracyMeters => accuracy?.round();
 
   String? get mapsUrl => hasLocation
       ? 'https://maps.google.com/?q=${latitude!.toStringAsFixed(6)},${longitude!.toStringAsFixed(6)}'
       : null;
 
+  /// Capture time in the language's [AppLocalizations.dateTimePattern].
+  String formattedDateTime(AppLocalizations l10n) =>
+      formatTimestamp(timestamp, l10n);
+
+  /// Coordinates, or the localised "unknown location" text.
+  String formattedCoordinates(AppLocalizations l10n) =>
+      coordinates ?? l10n.unknownLocation;
+
+  /// Subject used when sharing, e.g. for e-mails.
+  String shareSubject(AppLocalizations l10n) =>
+      l10n.shareSubject(formattedDateTime(l10n));
+
   /// Text sent along with the photo when sharing.
-  String get shareText {
+  String shareText(AppLocalizations l10n) {
+    final coords = formattedCoordinates(l10n);
     final lines = [
-      'Bike locked on $formattedDateTime',
+      l10n.shareLockedOn(formattedDateTime(l10n)),
       ?address,
-      'GPS: $formattedCoordinates'
-          '${accuracy != null ? ' (±${accuracy!.round()} m)' : ''}',
+      accuracyMeters != null
+          ? l10n.shareGpsWithAccuracy(coords, accuracyMeters!)
+          : l10n.shareGps(coords),
       ?mapsUrl,
     ];
     return lines.join('\n');

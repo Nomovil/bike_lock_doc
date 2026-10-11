@@ -1,0 +1,145 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Bike Lock Proof",
+  "@appTitle": {
+    "description": "App name shown in the app bar and the task switcher."
+  },
+
+  "dateTimePattern": "dd.MM.yyyy HH:mm:ss",
+  "@dateTimePattern": {
+    "description": "intl DateFormat pattern for the capture time, used on screen, on the photo and in the shared text. Keep it unambiguous (day before month, 24 h) – it is used as evidence."
+  },
+
+  "takePhoto": "Take photo",
+  "@takePhoto": {
+    "description": "Main button when no photo is stored yet."
+  },
+  "newPhoto": "New photo",
+  "@newPhoto": {
+    "description": "Main button when a photo is stored; the new photo replaces it."
+  },
+  "share": "Share",
+  "@share": {
+    "description": "Button that opens the system share sheet."
+  },
+
+  "noPhotoYet": "No photo yet",
+  "@noPhotoYet": {
+    "description": "Heading of the empty state."
+  },
+  "emptyStateText": "Take a photo of your locked bike. Date, time and location are saved with it. Each new photo replaces the previous one.",
+  "@emptyStateText": {
+    "description": "Explanation in the empty state."
+  },
+
+  "gettingLocation": "Getting location…",
+  "@gettingLocation": {
+    "description": "Progress text while waiting for GPS."
+  },
+  "savingPhoto": "Saving photo…",
+  "@savingPhoto": {
+    "description": "Progress text while stamping and storing the photo."
+  },
+
+  "dateTimeLabel": "Date & time",
+  "@dateTimeLabel": {
+    "description": "Label under the capture time in the details card."
+  },
+  "addressLabel": "Address",
+  "@addressLabel": {
+    "description": "Label under the street address in the details card."
+  },
+  "gpsLabel": "GPS",
+  "@gpsLabel": {
+    "description": "Label under the coordinates when the accuracy is unknown."
+  },
+  "gpsLabelWithAccuracy": "GPS (±{meters} m)",
+  "@gpsLabelWithAccuracy": {
+    "description": "Label under the coordinates with the GPS accuracy radius.",
+    "placeholders": {
+      "meters": { "type": "int", "example": "4" }
+    }
+  },
+  "unknownLocation": "Unknown location",
+  "@unknownLocation": {
+    "description": "Shown instead of coordinates when no location was recorded."
+  },
+
+  "stampLocationUnavailable": "Location unavailable",
+  "@stampLocationUnavailable": {
+    "description": "Line stamped onto the photo when no location was recorded."
+  },
+  "stampGps": "GPS {coordinates}",
+  "@stampGps": {
+    "description": "Line stamped onto the photo with the coordinates.",
+    "placeholders": {
+      "coordinates": { "type": "String", "example": "52.520008, 13.404954" }
+    }
+  },
+  "stampGpsWithAccuracy": "GPS {coordinates}  (±{meters} m)",
+  "@stampGpsWithAccuracy": {
+    "description": "Line stamped onto the photo with coordinates and accuracy.",
+    "placeholders": {
+      "coordinates": { "type": "String", "example": "52.520008, 13.404954" },
+      "meters": { "type": "int", "example": "4" }
+    }
+  },
+
+  "shareSubject": "Bike lock {dateTime}",
+  "@shareSubject": {
+    "description": "Subject when sharing (e.g. e-mail subject).",
+    "placeholders": {
+      "dateTime": { "type": "String", "example": "10.10.2026 18:30:05" }
+    }
+  },
+  "shareLockedOn": "Bike locked on {dateTime}",
+  "@shareLockedOn": {
+    "description": "First line of the shared text.",
+    "placeholders": {
+      "dateTime": { "type": "String", "example": "10.10.2026 18:30:05" }
+    }
+  },
+  "shareGps": "GPS: {coordinates}",
+  "@shareGps": {
+    "description": "Coordinates line of the shared text.",
+    "placeholders": {
+      "coordinates": { "type": "String", "example": "52.520008, 13.404954" }
+    }
+  },
+  "shareGpsWithAccuracy": "GPS: {coordinates} (±{meters} m)",
+  "@shareGpsWithAccuracy": {
+    "description": "Coordinates line of the shared text, with accuracy.",
+    "placeholders": {
+      "coordinates": { "type": "String", "example": "52.520008, 13.404954" },
+      "meters": { "type": "int", "example": "4" }
+    }
+  },
+
+  "errorCamera": "Could not open camera: {error}",
+  "@errorCamera": {
+    "description": "Snack bar when the camera cannot be opened.",
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "errorLocationServicesOff": "Location services are turned off.",
+  "@errorLocationServicesOff": {
+    "description": "Snack bar when the device location service is disabled."
+  },
+  "errorLocationPermissionDenied": "Location permission denied.",
+  "@errorLocationPermissionDenied": {
+    "description": "Snack bar when the user denied location access."
+  },
+  "savedWithoutLocation": "Photo saved, but the location could not be determined.",
+  "@savedWithoutLocation": {
+    "description": "Snack bar after saving a photo without location."
+  },
+  "errorSaving": "Saving failed: {error}",
+  "@errorSaving": {
+    "description": "Snack bar when stamping or storing the photo failed.",
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  }
+}

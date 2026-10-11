@@ -1,0 +1,37 @@
+{
+  "@@locale": "de",
+
+  "appTitle": "Fahrradschloss-Nachweis",
+  "dateTimePattern": "dd.MM.yyyy HH:mm:ss",
+
+  "takePhoto": "Foto aufnehmen",
+  "newPhoto": "Neues Foto",
+  "share": "Teilen",
+
+  "noPhotoYet": "Noch kein Foto",
+  "emptyStateText": "Fotografiere dein abgeschlossenes Fahrrad. Datum, Uhrzeit und Standort werden mitgespeichert. Jedes neue Foto ersetzt das vorherige.",
+
+  "gettingLocation": "Standort wird ermittelt…",
+  "savingPhoto": "Foto wird gespeichert…",
+
+  "dateTimeLabel": "Datum & Uhrzeit",
+  "addressLabel": "Adresse",
+  "gpsLabel": "GPS",
+  "gpsLabelWithAccuracy": "GPS (±{meters} m)",
+  "unknownLocation": "Standort unbekannt",
+
+  "stampLocationUnavailable": "Standort nicht verfügbar",
+  "stampGps": "GPS {coordinates}",
+  "stampGpsWithAccuracy": "GPS {coordinates}  (±{meters} m)",
+
+  "shareSubject": "Fahrradschloss {dateTime}",
+  "shareLockedOn": "Fahrrad abgeschlossen am {dateTime}",
+  "shareGps": "GPS: {coordinates}",
+  "shareGpsWithAccuracy": "GPS: {coordinates} (±{meters} m)",
+
+  "errorCamera": "Kamera konnte nicht geöffnet werden: {error}",
+  "errorLocationServicesOff": "Die Standortdienste sind ausgeschaltet.",
+  "errorLocationPermissionDenied": "Standortzugriff wurde verweigert.",
+  "savedWithoutLocation": "Foto gespeichert, aber der Standort konnte nicht ermittelt werden.",
+  "errorSaving": "Speichern fehlgeschlagen: {error}"
+}

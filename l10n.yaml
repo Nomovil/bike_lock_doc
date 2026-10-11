@@ -1,0 +1,10 @@
+# Flutter gen-l10n configuration. Translations live in lib/l10n/app_<locale>.arb;
+# the Dart code in lib/l10n/app_localizations*.dart is generated from them by
+# `flutter gen-l10n` (also runs automatically on `flutter run` / `flutter build`).
+arb-dir: lib/l10n
+template-arb-file: app_en.arb
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+nullable-getter: false
+# Lists every key a language is missing (empty {} when all are translated).
+untranslated-messages-file: build/untranslated-messages.json

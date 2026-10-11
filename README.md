@@ -29,8 +29,9 @@ data model, test plan, decisions, with Mermaid diagrams) is in
 3. [Building](#building)
 4. [Sharing the app with friends](#sharing-the-app-with-friends)
 5. [Signing the release build (Android)](#signing-the-release-build-android)
-6. [Project structure](#project-structure)
-7. [Troubleshooting](#troubleshooting)
+6. [Translations](#translations)
+7. [Project structure](#project-structure)
+8. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -272,6 +273,64 @@ keytool -printcert -jarfile build/app/outputs/flutter-apk/app-release.apk
 
 ---
 
+## Translations
+
+The app follows the phone's system language. Supported: **English**
+(default/fallback) and **German**. It uses Flutter's built-in
+[`gen-l10n`](https://docs.flutter.dev/ui/accessibility-and-internationalization/internationalization)
+tool with ARB files; the text stamped onto the photo and the shared text are
+translated too.
+
+| File | Purpose |
+| --- | --- |
+| `lib/l10n/app_en.arb` | English texts – the **template**, with a description for every text |
+| `lib/l10n/app_de.arb` | German texts |
+| `lib/l10n/app_localizations*.dart` | **generated** Dart code – don't edit by hand |
+| `l10n.yaml` | `gen-l10n` configuration |
+| `android/app/src/main/res/values*/strings.xml` | launcher name on Android |
+
+### Change a text
+
+Edit the ARB file(s), then run `flutter gen-l10n` (or simply `flutter run` /
+`flutter build`, which do it automatically). Commit the regenerated
+`app_localizations*.dart` files too.
+
+### Add a new text
+
+1. Add the key, English text and an `@key` description to `app_en.arb`.
+   Values in `{braces}` are placeholders and must be listed under
+   `placeholders`.
+2. Add the same key to every other `app_<lang>.arb`.
+3. Use it in code: `AppLocalizations.of(context).myKey` (or
+   `l10n.myKey(value)` for texts with placeholders).
+
+### Add a new language (e.g. French)
+
+1. Copy `lib/l10n/app_de.arb` to `lib/l10n/app_fr.arb`, set
+   `"@@locale": "fr"` and translate every value (keep keys and
+   `{placeholders}` unchanged).
+2. Run `flutter gen-l10n` – French is now in
+   `AppLocalizations.supportedLocales` and picked automatically on French
+   phones.
+3. Android launcher name: add
+   `android/app/src/main/res/values-fr/strings.xml` with `app_name`.
+4. iOS: add `<string>fr</string>` to `CFBundleLocalizations` in
+   `ios/Runner/Info.plist`.
+
+Check for texts you forgot to translate: every `flutter gen-l10n` (and every
+build) writes `build/untranslated-messages.json`. It contains `{}` when
+everything is translated, otherwise the missing keys per language. Missing
+texts fall back to English in the app.
+
+Test a language without changing the phone's language: on Android 13+,
+*Settings → System → Languages → App languages*; or temporarily set
+`locale: const Locale('de')` on the `MaterialApp` in `lib/main.dart`.
+
+**Not yet translated:** the iOS permission dialog texts in `Info.plist`
+(needs `InfoPlist.strings` files added via Xcode).
+
+---
+
 ## Project structure
 
 ```
@@ -279,13 +338,15 @@ lib/
   main.dart            UI: home screen, camera, location, sharing
   photo_stamper.dart   draws the date/location strip, writes EXIF, encodes JPEG
   lock_record.dart     LockRecord model + LockStorage (keeps exactly one photo)
+  l10n/                translations (app_<lang>.arb) + generated Dart code
 test/
-  widget_test.dart     unit tests for LockRecord
+  widget_test.dart     unit tests for LockRecord and translations
 android/               Android project (permissions in app/src/main/AndroidManifest.xml)
 ios/                   iOS project (permission texts in Runner/Info.plist)
 docs/ARCHITECTURE.md   how the app works internally
 docs/spec/             full software specification (16 documents)
 pubspec.yaml           app version and dependencies
+l10n.yaml              translation tool configuration
 ```
 
 ### Dependencies
@@ -299,6 +360,7 @@ pubspec.yaml           app version and dependencies
 | `share_plus` | the system share sheet |
 | `image` | JPEG encoding and EXIF metadata |
 | `intl` | date formatting |
+| `flutter_localizations` | translations (part of the Flutter SDK) |
 
 Update them with `flutter pub upgrade` (within allowed versions) or
 `flutter pub outdated` to see newer major versions.

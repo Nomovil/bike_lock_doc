@@ -53,7 +53,8 @@ quadrantChart
 
 | ID | Issue | Decision needed by | Status |
 | --- | --- | --- | --- |
-| O-1 | German UI translation? | after 1.0 feedback | open |
+| O-1 | German UI translation? | 1.1 | **done** – ARB-based, see NFR-61 |
+| O-5 | Translate iOS permission texts (`InfoPlist.strings`) | 1.1 | open |
 | O-2 | Show "photo is X hours old" hint? | after 1.0 feedback | open |
 | O-3 | Atomic JSON write (temp + rename) for R-04 | 1.1 | planned |
 | O-4 | Extract camera/location/share into services for widget tests | when 2nd screen appears | deferred |
@@ -75,6 +76,6 @@ mindmap
       Optional second photo frame number
       Bike details owner frame number
     Platform
-      German localisation
+      More languages
       Play Store release
 ```
