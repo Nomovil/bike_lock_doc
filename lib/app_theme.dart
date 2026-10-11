@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 /// Material 3 derives the whole colour palette (buttons, app bar, cards,
 /// progress indicators, light and dark variants) from this one seed colour.
 /// Try e.g. `Colors.indigo`, `Colors.deepOrange` or `Color(0xFF2E7D32)`.
-const Color appSeedColor = Colors.teal;
-
+// const Color appSeedColor = Colors.teal;
+const Color appSeedColor = Color(0xFFFF6617);
 /// Light theme, used when the system is in light mode.
 final ThemeData lightTheme = _buildTheme(Brightness.light);
 
