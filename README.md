@@ -268,11 +268,17 @@ install.
 and back up the `.jks` file and passwords**. If you lose them you can't
 publish updates to the installed app anymore.
 
-Check which key an APK is signed with:
+Check which key an APK is signed with (`apksigner` is in the Android SDK's
+`build-tools/<version>/` folder; `keytool -printcert -jarfile` does **not**
+work for modern APKs):
 
 ```sh
-keytool -printcert -jarfile build/app/outputs/flutter-apk/app-release.apk
+~/Android/Sdk/build-tools/36.0.0/apksigner verify --print-certs \
+  build/app/outputs/flutter-apk/app-release.apk
 ```
+
+`CN=Android Debug` means the debug key was used; otherwise you see the name
+you entered when creating your key.
 
 ---
 
