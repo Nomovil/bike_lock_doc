@@ -106,6 +106,6 @@ flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/icon/icon.png"
-  adaptive_icon_background: "#009688"     # or an image path
+  adaptive_icon_background: "#FF6617"     # or an image path
   adaptive_icon_foreground: "assets/icon/icon.png"
   remove_alpha_ios: true                   # the App Store rejects transparent icons
